@@ -1,8 +1,8 @@
 export module Mutation {
   interface CreateUsernameResponse {
     createUsername: {
-      success: Boolean;
-      error: String;
+      success: boolean;
+      error: string;
     };
   }
 

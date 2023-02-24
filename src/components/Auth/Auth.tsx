@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useMutation } from "@apollo/client";
 import UserOperations from "../../graphql/operations/user";
 import { Mutation } from "@/graphql/types/user";
+import toast from "react-hot-toast";
 
 type AuthProps = {
   session: Session | null;
@@ -14,7 +15,7 @@ type AuthProps = {
 const Auth: React.FC<AuthProps> = ({ session, reloadSession }) => {
   const [username, setUsername] = useState("");
 
-  const [createUsername, { data, loading, error }] = useMutation<
+  const [createUsername, { loading, error }] = useMutation<
     Mutation.CreateUsernameResponse,
     Mutation.CreateUsernameVariables
   >(UserOperations.Mutations.createUsername);
@@ -23,9 +24,24 @@ const Auth: React.FC<AuthProps> = ({ session, reloadSession }) => {
     if (!username) return;
 
     try {
-      await createUsername({ variables: { username } });
+      const { data } = await createUsername({ variables: { username } });
+
+      if (!data?.createUsername) {
+        throw new Error();
+      }
+
+      if (data.createUsername.error) {
+        throw new Error(data.createUsername.error);
+      }
+
+      toast.success("User successfully created!");
+
+      reloadSession();
     } catch (error) {
-      console.log("onSubmit error: ", error);
+      if (error instanceof Error) {
+        toast.error(error.message);
+        console.log("onSubmit error: ", error);
+      }
     }
   };
 
