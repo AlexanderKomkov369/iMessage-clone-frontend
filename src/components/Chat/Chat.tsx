@@ -1,6 +1,5 @@
 import React from "react";
-import { Button, Flex } from "@chakra-ui/react";
-import { signOut } from "next-auth/react";
+import { Flex } from "@chakra-ui/react";
 import { Session } from "next-auth";
 import ConversationsWrapper from "@/components/Chat/Conversations/ConversationsWrapper";
 import FeedWrapper from "@/components/Chat/Feed/FeedWrapper";

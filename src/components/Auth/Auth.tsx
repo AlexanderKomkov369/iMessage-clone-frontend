@@ -3,9 +3,11 @@ import { Session } from "next-auth";
 import { Button, Center, Image, Input, Stack, Text } from "@chakra-ui/react";
 import { signIn } from "next-auth/react";
 import { useMutation } from "@apollo/client";
-import UserOperations from "../../graphql/operations/user";
-import { Mutation } from "@/graphql/types/user";
 import toast from "react-hot-toast";
+import { UserOperations } from "../../graphql/operations/user";
+import { Mutation } from "@/graphql/types/user";
+import CreateUsernameVariables = Mutation.CreateUsernameVariables;
+import CreateUsernameResponse = Mutation.CreateUsernameResponse;
 
 type AuthProps = {
   session: Session | null;
@@ -16,8 +18,8 @@ const Auth: React.FC<AuthProps> = ({ session, reloadSession }) => {
   const [username, setUsername] = useState("");
 
   const [createUsername, { loading, error }] = useMutation<
-    Mutation.CreateUsernameResponse,
-    Mutation.CreateUsernameVariables
+    CreateUsernameResponse,
+    CreateUsernameVariables
   >(UserOperations.Mutations.createUsername);
 
   const onSubmit = async () => {
