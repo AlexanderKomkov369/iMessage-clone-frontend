@@ -30,7 +30,10 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
       py={6}
       px={3}
     >
-      <ConversationsList session={session} />
+      <ConversationsList
+        session={session}
+        conversations={conversationData?.conversations ?? []}
+      />
     </Box>
   );
 };
