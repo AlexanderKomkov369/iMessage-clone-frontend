@@ -26,6 +26,7 @@ import { Mutation } from "@/graphql/types/conversation";
 import CreateConversationVariables = Mutation.CreateConversationVariables;
 import CreateConversationResponse = Mutation.CreateConversationResponse;
 import { Session } from "next-auth";
+import { useRouter } from "next/router";
 
 type ConversationsModalProps = {
   session: Session;
@@ -41,6 +42,7 @@ const ConversationsModal: React.FC<ConversationsModalProps> = ({
   const {
     user: { id: userId },
   } = session;
+  const router = useRouter();
 
   const [username, setUsername] = useState("");
   const [participants, setParticipants] = useState<SearchedUser[]>([]);
@@ -61,7 +63,20 @@ const ConversationsModal: React.FC<ConversationsModalProps> = ({
           participantIds,
         },
       });
-      console.log("Here is a data: ", data);
+
+      if (!data?.createConversation) {
+        throw new Error("Failed to create conversation");
+      }
+
+      const {
+        createConversation: { conversationId },
+      } = data;
+
+      router.push({ query: { conversationId } });
+
+      setParticipants([]);
+      setUsername("");
+      onClose();
     } catch (error) {
       console.log("onCreateConversation error: ", error);
       if (error instanceof Error) {
