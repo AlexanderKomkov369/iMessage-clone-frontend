@@ -130,7 +130,7 @@ const ConversationsModal: React.FC<ConversationsModalProps> = ({
                 addParticipant={addParticipant}
               />
             )}
-            {!!participants.length && (
+            {participants.length !== 0 && (
               <>
                 <Participants
                   participants={participants}

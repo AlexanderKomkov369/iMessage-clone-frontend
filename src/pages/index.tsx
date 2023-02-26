@@ -12,8 +12,6 @@ type HomeProps = {
 const Home: NextPage<HomeProps> = () => {
   const { data: session } = useSession();
 
-  console.log("HERE S A SESSION: ", session);
-
   const reloadSession = () => {
     const event = new Event("visibilitychange");
     document.dispatchEvent(event);
