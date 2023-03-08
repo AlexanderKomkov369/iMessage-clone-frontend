@@ -12,6 +12,6 @@ export module Mutation {
   }
 }
 
-export interface ConversationResponse {
+export interface ConversationsResponse {
   conversations: ConversationPopulated[];
 }
