@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Session } from "next-auth";
-import { Box, Text } from "@chakra-ui/react";
+import { Box, Stack, Text } from "@chakra-ui/react";
 import ConversationsModal from "@/components/Chat/Conversations/Modal/Modal";
 import { ConversationPopulated } from "../../../../../../backend/src/graphql/types/conversations/types";
 import ConversationItem from "@/components/Chat/Conversations/ConversationsList/ConversationItem";
 import { Conversation } from "@/components/Chat/Conversations/ConversationsWrapper";
+import { useRouter } from "next/router";
 
 type ConversationsListProps = {
   session: Session;
@@ -17,10 +18,13 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
   conversations,
   onViewConversation,
 }) => {
+  const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
   const {
     user: { id: userId },
   } = session;
+
+  const { conversationId } = router.query;
 
   const onOpen = () => setIsOpen(true);
   const onClose = () => setIsOpen(false);
@@ -41,15 +45,17 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
         </Text>
       </Box>
       <ConversationsModal session={session} isOpen={isOpen} onClose={onClose} />
-      {conversations.map((conversation) => (
-        <ConversationItem
-          key={conversation.id}
-          userId={userId}
-          conversation={conversation}
-          selectedConversationId={conversation.id}
-          onClick={() => onViewConversation(conversation.id)}
-        />
-      ))}
+      <Stack>
+        {conversations.map((conversation) => (
+          <ConversationItem
+            key={conversation.id}
+            userId={userId}
+            conversation={conversation}
+            selectedConversationId={conversationId as string}
+            onClick={() => onViewConversation(conversation.id)}
+          />
+        ))}
+      </Stack>
     </Box>
   );
 };
