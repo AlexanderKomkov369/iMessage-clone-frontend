@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { ConversationOperations } from "@/graphql/operations/conversation";
 import { formatUsernames } from "@/util/functions";
-import { ConversationsResponse } from "@/graphql/types/conversation";
+import { ConversationsData } from "@/graphql/types/conversation";
 // import SkeletonLoader from "../../../common/SkeletonLoader";
 
 interface MessagesHeaderProps {
@@ -17,7 +17,7 @@ const MessagesHeader: React.FC<MessagesHeaderProps> = ({
   conversationId,
 }) => {
   const router = useRouter();
-  const { data, loading } = useQuery<ConversationsResponse>(
+  const { data, loading } = useQuery<ConversationsData>(
     ConversationOperations.Queries.conversations
   );
 

@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import { UserOperations } from "../../graphql/operations/user";
 import { Mutation } from "@/graphql/types/user";
 import CreateUsernameVariables = Mutation.CreateUsernameVariables;
-import CreateUsernameResponse = Mutation.CreateUsernameResponse;
+import CreateUsernameData = Mutation.CreateUsernameData;
 
 type AuthProps = {
   session: Session | null;
@@ -18,7 +18,7 @@ const Auth: React.FC<AuthProps> = ({ session, reloadSession }) => {
   const [username, setUsername] = useState("");
 
   const [createUsername, { loading, error }] = useMutation<
-    CreateUsernameResponse,
+    CreateUsernameData,
     CreateUsernameVariables
   >(UserOperations.Mutations.createUsername);
 

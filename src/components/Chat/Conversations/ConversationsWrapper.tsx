@@ -6,7 +6,7 @@ import { useQuery } from "@apollo/client";
 import { ConversationOperations } from "@/graphql/operations/conversation";
 import {
   ConversationPopulated,
-  ConversationsResponse,
+  ConversationsData,
 } from "@/graphql/types/conversation";
 import { useRouter } from "next/router";
 import SkeletonLoader from "@/components/common/SkeletonLoader";
@@ -27,9 +27,7 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
     error: conversationError,
     loading: conversationLoading,
     subscribeToMore,
-  } = useQuery<ConversationsResponse>(
-    ConversationOperations.Queries.conversations
-  );
+  } = useQuery<ConversationsData>(ConversationOperations.Queries.conversations);
   const router = useRouter();
   const {
     query: { conversationId },

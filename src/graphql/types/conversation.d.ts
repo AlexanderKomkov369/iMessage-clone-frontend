@@ -1,7 +1,7 @@
 export { ConversationPopulated } from "../../../../backend/src/graphql/types/conversations/types";
 
 export module Mutation {
-  export interface CreateConversationResponse {
+  export interface CreateConversationData {
     createConversation: {
       conversationId: string;
     };
@@ -12,6 +12,6 @@ export module Mutation {
   }
 }
 
-export interface ConversationsResponse {
+export interface ConversationsData {
   conversations: ConversationPopulated[];
 }

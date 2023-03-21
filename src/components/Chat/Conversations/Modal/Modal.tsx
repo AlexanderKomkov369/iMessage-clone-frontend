@@ -14,7 +14,7 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { UserOperations } from "@/graphql/operations/user";
 import { Query } from "@/graphql/types/user";
 import UserSearchList from "@/components/Chat/Conversations/Modal/UserSearchList/UserSearchList";
-import SearchUsersResponse = Query.SearchUsersResponse;
+import SearchUsersData = Query.SearchUsersData;
 import SearchUsersVariables = Query.SearchUsersVariables;
 import SearchedUser = Query.SearchedUser;
 import Participants from "@/components/Chat/Conversations/Modal/UserSearchList/Participants";
@@ -24,7 +24,7 @@ import toast from "react-hot-toast";
 import { ConversationOperations } from "@/graphql/operations/conversation";
 import { Mutation } from "@/graphql/types/conversation";
 import CreateConversationVariables = Mutation.CreateConversationVariables;
-import CreateConversationResponse = Mutation.CreateConversationResponse;
+import CreateConversationData = Mutation.CreateConversationData;
 import { Session } from "next-auth";
 import { useRouter } from "next/router";
 
@@ -47,11 +47,11 @@ const ConversationsModal: React.FC<ConversationsModalProps> = ({
   const [username, setUsername] = useState("");
   const [participants, setParticipants] = useState<SearchedUser[]>([]);
   const [searchUsers, { data, loading: searchUsersLoading }] = useLazyQuery<
-    SearchUsersResponse,
+    SearchUsersData,
     SearchUsersVariables
   >(UserOperations.Queries.searchUsers);
   const [createConversation, { loading: createConversationLoading }] =
-    useMutation<CreateConversationResponse, CreateConversationVariables>(
+    useMutation<CreateConversationData, CreateConversationVariables>(
       ConversationOperations.Mutations.createConversation
     );
 

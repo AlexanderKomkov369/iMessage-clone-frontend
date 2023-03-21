@@ -1,12 +1,13 @@
 import { Flex, Stack } from "@chakra-ui/react";
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@apollo/client";
-import { Query } from "@/graphql/types/message";
-import MessagesResponse = Query.MessagesResponse;
+import { Query, Subscription } from "@/graphql/types/message";
+import MessagesData = Query.MessagesData;
 import MessagesVariables = Query.MessagesVariables;
 import { MessageOperations } from "@/graphql/operations/message";
 import toast from "react-hot-toast";
 import SkeletonLoader from "@/components/common/SkeletonLoader";
+import MessageSubscriptionData = Subscription.MessageSubscriptionData;
 
 export type MessagesProps = {
   userId: string;
@@ -15,7 +16,7 @@ export type MessagesProps = {
 
 const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
   const { data, loading, error, subscribeToMore } = useQuery<
-    MessagesResponse,
+    MessagesData,
     MessagesVariables
   >(MessageOperations.Queries.messages, {
     variables: {
@@ -25,6 +26,27 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
       toast.error(message);
     },
   });
+
+  const subscribeToMoreMessages = (conversationId: string) => {
+    subscribeToMore({
+      document: MessageOperations.Subscriptions.messageSent,
+      variables: {
+        conversationId,
+      },
+      updateQuery: (prev, { subscriptionData }: MessageSubscriptionData) => {
+        if (!subscriptionData) return prev;
+
+        const newMessage = subscriptionData.data.messageSent;
+        return Object.assign({}, prev, {
+          messages: [newMessage, ...prev.messages],
+        } as MessagesData);
+      },
+    });
+  };
+
+  useEffect(() => {
+    subscribeToMoreMessages(conversationId);
+  }, [conversationId]);
 
   if (error) {
     return null;
@@ -41,7 +63,7 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
         <Flex direction={"column-reverse"} height={"100%"} overflowY={"scroll"}>
           {data.messages.map((message) => (
             // <MessageItem />
-            <div>{message.body}</div>
+            <div key={message.id}>{message.body}</div>
           ))}
         </Flex>
       )}

@@ -1,7 +1,7 @@
 import { MessagePopulated } from "../../../../backend/src/graphql/types/messages";
 
 export module Query {
-  export interface MessagesResponse {
+  export interface MessagesData {
     messages: MessagePopulated[];
   }
 
@@ -11,7 +11,7 @@ export module Query {
 }
 
 export module Mutation {
-  export interface SendMessageResponse {
+  export interface SendMessageData {
     sendMessage: boolean;
   }
 
@@ -20,5 +20,15 @@ export module Mutation {
     conversationId: string;
     senderId: string;
     body: string;
+  }
+}
+
+export module Subscription {
+  export interface MessageSubscriptionData {
+    subscriptionData: {
+      data: {
+        messageSent: MessagePopulated;
+      };
+    };
   }
 }

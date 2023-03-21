@@ -1,5 +1,5 @@
 export module Mutation {
-  interface CreateUsernameResponse {
+  interface CreateUsernameData {
     createUsername: {
       success: boolean;
       error: string;
@@ -16,7 +16,7 @@ export module Query {
     username: string;
   }
 
-  interface SearchUsersResponse {
+  interface SearchUsersData {
     searchUsers: SearchedUser[];
   }
 

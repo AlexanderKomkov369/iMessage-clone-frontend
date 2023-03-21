@@ -6,7 +6,7 @@ import { useMutation } from "@apollo/client";
 import { MessageOperations } from "@/graphql/operations/message";
 import { Mutation } from "@/graphql/types/message";
 import { ObjectId } from "bson";
-import SendMessageResponse = Mutation.SendMessageResponse;
+import SendMessageData = Mutation.SendMessageData;
 import SendMessageVariables = Mutation.SendMessageVariables;
 
 type MessagesInputProps = {
@@ -19,7 +19,7 @@ const MessagesInput: React.FC<MessagesInputProps> = ({
   conversationId,
 }) => {
   const [messageBody, setMessageBody] = useState("");
-  const [sendMessage] = useMutation<SendMessageResponse, SendMessageVariables>(
+  const [sendMessage] = useMutation<SendMessageData, SendMessageVariables>(
     MessageOperations.Mutations.sendMessage
   );
 
