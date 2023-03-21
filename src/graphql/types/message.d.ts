@@ -11,13 +11,14 @@ export module Query {
 }
 
 export module Mutation {
-  export interface CreateConversationResponse {
-    createConversation: {
-      conversationId: string;
-    };
+  export interface SendMessageResponse {
+    sendMessage: boolean;
   }
 
-  export interface CreateConversationVariables {
-    participantIds: string[];
+  export interface SendMessageVariables {
+    id: string;
+    conversationId: string;
+    senderId: string;
+    body: string;
   }
 }

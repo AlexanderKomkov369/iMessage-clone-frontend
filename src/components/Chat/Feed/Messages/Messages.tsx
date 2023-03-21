@@ -6,6 +6,7 @@ import MessagesResponse = Query.MessagesResponse;
 import MessagesVariables = Query.MessagesVariables;
 import { MessageOperations } from "@/graphql/operations/message";
 import toast from "react-hot-toast";
+import SkeletonLoader from "@/components/common/SkeletonLoader";
 
 export type MessagesProps = {
   userId: string;
@@ -25,12 +26,15 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
     },
   });
 
+  if (error) {
+    return null;
+  }
+
   return (
     <Flex direction={"column"} justify={"flex-end"} overflow={"hidden"}>
       {loading && (
-        <Stack>
-          {/*<SkeletonLoader count={4} height={"60px"} width={"100%"} />*/}
-          <span>LOADING MESSAGES</span>
+        <Stack spacing={4} px={4}>
+          <SkeletonLoader count={4} height={"60px"} />
         </Stack>
       )}
       {data?.messages && (

@@ -9,6 +9,7 @@ import {
   ConversationsResponse,
 } from "@/graphql/types/conversation";
 import { useRouter } from "next/router";
+import SkeletonLoader from "@/components/common/SkeletonLoader";
 
 export module Conversation {
   export type onViewConversation = (conversationId: string) => void;
@@ -72,15 +73,21 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
     <Box
       display={{ base: conversationId ? "none" : "flex", md: "flex" }}
       width={{ base: "100%", md: "400px" }}
+      flexDirection={"column"}
       bg={"whiteAlpha.50"}
+      gap={4}
       py={6}
       px={3}
     >
-      <ConversationsList
-        session={session}
-        conversations={conversationData?.conversations ?? []}
-        onViewConversation={onViewConversation}
-      />
+      {conversationLoading ? (
+        <SkeletonLoader count={7} height={"80px"} />
+      ) : (
+        <ConversationsList
+          session={session}
+          conversations={conversationData?.conversations ?? []}
+          onViewConversation={onViewConversation}
+        />
+      )}
     </Box>
   );
 };
