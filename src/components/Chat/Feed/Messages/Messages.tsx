@@ -8,6 +8,7 @@ import { MessageOperations } from "@/graphql/operations/message";
 import toast from "react-hot-toast";
 import SkeletonLoader from "@/components/common/SkeletonLoader";
 import MessageSubscriptionData = Subscription.MessageSubscriptionData;
+import MessageItem from "@/components/Chat/Feed/Messages/MessageItem";
 
 export type MessagesProps = {
   userId: string;
@@ -37,8 +38,12 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
         if (!subscriptionData) return prev;
 
         const newMessage = subscriptionData.data.messageSent;
+
         return Object.assign({}, prev, {
-          messages: [newMessage, ...prev.messages],
+          messages:
+            newMessage.sender.id === userId
+              ? prev.messages
+              : [newMessage, ...prev.messages],
         } as MessagesData);
       },
     });
@@ -62,8 +67,11 @@ const Messages: React.FC<MessagesProps> = ({ userId, conversationId }) => {
       {data?.messages && (
         <Flex direction={"column-reverse"} height={"100%"} overflowY={"scroll"}>
           {data.messages.map((message) => (
-            // <MessageItem />
-            <div key={message.id}>{message.body}</div>
+            <MessageItem
+              key={message.id}
+              message={message}
+              sentByMe={message.sender.id === userId}
+            />
           ))}
         </Flex>
       )}

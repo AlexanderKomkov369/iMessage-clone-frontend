@@ -4,10 +4,11 @@ import { Box, Input } from "@chakra-ui/react";
 import toast from "react-hot-toast";
 import { useMutation } from "@apollo/client";
 import { MessageOperations } from "@/graphql/operations/message";
-import { Mutation } from "@/graphql/types/message";
+import { Mutation, Query } from "@/graphql/types/message";
 import { ObjectId } from "bson";
 import SendMessageData = Mutation.SendMessageData;
 import SendMessageVariables = Mutation.SendMessageVariables;
+import MessagesData = Query.MessagesData;
 
 type MessagesInputProps = {
   session: Session;
@@ -36,9 +37,44 @@ const MessagesInput: React.FC<MessagesInputProps> = ({
         body: messageBody,
       };
 
+      // Clear input
+      setMessageBody("");
+
       const { data, errors } = await sendMessage({
         variables: {
           ...newMessage,
+        },
+        optimisticResponse: {
+          sendMessage: true,
+        },
+        update: (cache) => {
+          const existingCache = cache.readQuery<MessagesData>({
+            query: MessageOperations.Queries.messages,
+            variables: { conversationId },
+          });
+
+          cache.writeQuery<MessagesData, Query.MessagesVariables>({
+            query: MessageOperations.Queries.messages,
+            variables: { conversationId },
+            data: {
+              ...existingCache,
+              messages: [
+                {
+                  id: messageId,
+                  body: messageBody,
+                  senderId: session.user.id,
+                  conversationId,
+                  sender: {
+                    id: session.user.id,
+                    username: session.user.username,
+                  },
+                  createdAt: new Date(),
+                  updatedAt: new Date(),
+                },
+                ...(existingCache ? existingCache.messages : []),
+              ],
+            },
+          });
         },
       });
 
