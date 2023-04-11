@@ -2,18 +2,20 @@ import React, { useEffect } from "react";
 import { Session } from "next-auth";
 import { Box } from "@chakra-ui/react";
 import ConversationsList from "@/components/Chat/Conversations/ConversationsList/ConversationsList";
-import { gql, useMutation, useQuery } from "@apollo/client";
+import { gql, useMutation, useQuery, useSubscription } from "@apollo/client";
 import { ConversationOperations } from "@/graphql/operations/conversation";
 import {
   ConversationPopulated,
   ConversationsData,
   Mutation,
+  Subscription,
 } from "@/graphql/types/conversation";
 import { useRouter } from "next/router";
 import SkeletonLoader from "@/components/common/SkeletonLoader";
 import MarkConversationAsReadData = Mutation.MarkConversationAsReadData;
 import MarkConversationAsReadVariables = Mutation.MarkConversationAsReadVariables;
 import { ParticipantPopulated } from "../../../../../backend/src/graphql/types/conversations";
+import ConversationUpdatedData = Subscription.ConversationUpdatedData;
 
 export module Conversation {
   export type onViewConversation = (
@@ -48,6 +50,25 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
     MarkConversationAsReadData,
     MarkConversationAsReadVariables
   >(ConversationOperations.Mutations.markConversationAsRead);
+
+  useSubscription<ConversationUpdatedData>(
+    ConversationOperations.Subscriptions.conversationUpdated,
+    {
+      onData: ({ client, data }) => {
+        const { data: subscriptionData } = data;
+
+        if (!subscriptionData) return;
+
+        const {
+          conversationUpdated: { conversation: updatedConversation },
+        } = subscriptionData;
+
+        if (updatedConversation.id === conversationId) {
+          onViewConversation(updatedConversation.id, false);
+        }
+      },
+    }
+  );
 
   const onViewConversation: Conversation.onViewConversation = async (
     conversationId,
