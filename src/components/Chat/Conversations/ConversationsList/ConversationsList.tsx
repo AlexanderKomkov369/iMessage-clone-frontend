@@ -46,15 +46,28 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
       </Box>
       <ConversationsModal session={session} isOpen={isOpen} onClose={onClose} />
       <Stack>
-        {conversations.map((conversation) => (
-          <ConversationItem
-            key={conversation.id}
-            userId={userId}
-            conversation={conversation}
-            selectedConversationId={conversationId as string}
-            onClick={() => onViewConversation(conversation.id)}
-          />
-        ))}
+        {conversations.map((conversation) => {
+          const participant = conversation.participants.find(
+            (participant: ConversationPopulated) =>
+              participant.user.id === userId
+          );
+
+          return (
+            <ConversationItem
+              key={conversation.id}
+              userId={userId}
+              conversation={conversation}
+              selectedConversationId={conversationId as string}
+              hasSeenLatestMessage={participant?.hasSeenLatestMessage}
+              onClick={() =>
+                onViewConversation(
+                  conversation.id,
+                  participant?.hasSeenLatestMessage
+                )
+              }
+            />
+          );
+        })}
       </Stack>
     </Box>
   );

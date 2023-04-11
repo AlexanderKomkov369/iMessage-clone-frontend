@@ -16,6 +16,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import { ConversationPopulated } from "../../../../../../backend/src/graphql/types/conversations/types";
 import { formatRelative } from "date-fns";
 import { formatUsernames } from "@/util/functions";
+import { GoPrimitiveDot } from "react-icons/go";
 
 interface ConversationItemProps {
   userId: string;
@@ -40,7 +41,7 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   conversation,
   onClick,
   selectedConversationId,
-  // hasSeenLatestMessage,
+  hasSeenLatestMessage,
   // onEditConversation,
   // onDeleteConversation,
   // onLeaveConversation,
@@ -112,9 +113,9 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       </Menu>
       {/*)}*/}
       <Flex position="absolute" left="-6px">
-        {/*{hasSeenLatestMessage === false && (*/}
-        {/*  <GoPrimitiveDot fontSize={18} color="#6B46C1" />*/}
-        {/*)}*/}
+        {hasSeenLatestMessage === false && (
+          <GoPrimitiveDot fontSize={18} color="#6B46C1" />
+        )}
       </Flex>
       <Avatar />
       <Flex justify="space-between" width="80%" height="100%">

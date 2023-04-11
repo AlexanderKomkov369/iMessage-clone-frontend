@@ -10,6 +10,15 @@ export module Mutation {
   export interface CreateConversationVariables {
     participantIds: string[];
   }
+
+  export interface MarkConversationAsReadData {
+    markConversationAsRead: boolean;
+  }
+
+  export interface MarkConversationAsReadVariables {
+    userId: string;
+    conversationId: string;
+  }
 }
 
 export interface ConversationsData {
