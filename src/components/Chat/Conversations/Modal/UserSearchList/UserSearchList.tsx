@@ -2,8 +2,8 @@ import React from "react";
 import { Query } from "@/graphql/types/user";
 import { Flex, Stack, Text } from "@chakra-ui/react";
 import UserSearchCard from "@/components/Chat/Conversations/Modal/UserSearchList/UserSearchCard";
-import SearchedUser = Query.SearchedUser;
 import Participants from "@/components/Chat/Conversations/Modal/UserSearchList/Participants";
+import SearchedUser = Query.SearchedUser;
 import AddParticipant = Participants.AddParticipant;
 
 type UserSearchListProps = {

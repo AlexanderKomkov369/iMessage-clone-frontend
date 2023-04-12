@@ -1,9 +1,9 @@
 import React from "react";
 import { Query } from "@/graphql/types/user";
-import SearchedUser = Query.SearchedUser;
-import RemoveParticipant = Participants.RemoveParticipant;
 import { Flex, Stack, Text } from "@chakra-ui/react";
 import { IoIosCloseCircleOutline } from "react-icons/io";
+import SearchedUser = Query.SearchedUser;
+import RemoveParticipant = Participants.RemoveParticipant;
 
 declare module Participants {
   export type AddParticipant = (user: SearchedUser) => void;

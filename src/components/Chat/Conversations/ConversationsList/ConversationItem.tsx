@@ -10,7 +10,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { AiOutlineEdit } from "react-icons/ai";
 import { MdDeleteOutline } from "react-icons/md";
 import { ConversationPopulated } from "../../../../../../backend/src/graphql/types/conversations/types";
 import { formatRelative } from "date-fns";

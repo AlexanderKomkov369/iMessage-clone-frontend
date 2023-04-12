@@ -14,19 +14,19 @@ import { useLazyQuery, useMutation } from "@apollo/client";
 import { UserOperations } from "@/graphql/operations/user";
 import { Query } from "@/graphql/types/user";
 import UserSearchList from "@/components/Chat/Conversations/Modal/UserSearchList/UserSearchList";
-import SearchUsersData = Query.SearchUsersData;
-import SearchUsersVariables = Query.SearchUsersVariables;
-import SearchedUser = Query.SearchedUser;
 import Participants from "@/components/Chat/Conversations/Modal/UserSearchList/Participants";
-import AddParticipant = Participants.AddParticipant;
-import RemoveParticipant = Participants.RemoveParticipant;
 import toast from "react-hot-toast";
 import { ConversationOperations } from "@/graphql/operations/conversation";
 import { Mutation } from "@/graphql/types/conversation";
-import CreateConversationVariables = Mutation.CreateConversationVariables;
-import CreateConversationData = Mutation.CreateConversationData;
 import { Session } from "next-auth";
 import { useRouter } from "next/router";
+import SearchUsersData = Query.SearchUsersData;
+import SearchUsersVariables = Query.SearchUsersVariables;
+import SearchedUser = Query.SearchedUser;
+import AddParticipant = Participants.AddParticipant;
+import RemoveParticipant = Participants.RemoveParticipant;
+import CreateConversationVariables = Mutation.CreateConversationVariables;
+import CreateConversationData = Mutation.CreateConversationData;
 
 type ConversationsModalProps = {
   session: Session;

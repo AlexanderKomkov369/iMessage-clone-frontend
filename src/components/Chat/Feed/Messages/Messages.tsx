@@ -2,13 +2,13 @@ import { Flex, Stack } from "@chakra-ui/react";
 import React, { useEffect } from "react";
 import { useQuery } from "@apollo/client";
 import { Query, Subscription } from "@/graphql/types/message";
-import MessagesData = Query.MessagesData;
-import MessagesVariables = Query.MessagesVariables;
 import { MessageOperations } from "@/graphql/operations/message";
 import toast from "react-hot-toast";
 import SkeletonLoader from "@/components/common/SkeletonLoader";
-import MessageSubscriptionData = Subscription.MessageSubscriptionData;
 import MessageItem from "@/components/Chat/Feed/Messages/MessageItem";
+import MessagesData = Query.MessagesData;
+import MessagesVariables = Query.MessagesVariables;
+import MessageSubscriptionData = Subscription.MessageSubscriptionData;
 
 export type MessagesProps = {
   userId: string;

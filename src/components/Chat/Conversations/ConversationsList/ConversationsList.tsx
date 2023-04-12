@@ -9,11 +9,11 @@ import { useRouter } from "next/router";
 import { useMutation } from "@apollo/client";
 import { ConversationOperations } from "@/graphql/operations/conversation";
 import { Mutation } from "@/graphql/types/conversation";
-import DeleteConversationVariables = Mutation.DeleteConversationVariables;
-import DeleteConversationData = Mutation.DeleteConversationData;
 import toast from "react-hot-toast";
 import * as process from "process";
 import { signOut } from "next-auth/react";
+import DeleteConversationVariables = Mutation.DeleteConversationVariables;
+import DeleteConversationData = Mutation.DeleteConversationData;
 
 type ConversationsListProps = {
   session: Session;

@@ -12,9 +12,9 @@ import {
 } from "@/graphql/types/conversation";
 import { useRouter } from "next/router";
 import SkeletonLoader from "@/components/common/SkeletonLoader";
+import { ParticipantPopulated } from "../../../../../backend/src/graphql/types/conversations";
 import MarkConversationAsReadData = Mutation.MarkConversationAsReadData;
 import MarkConversationAsReadVariables = Mutation.MarkConversationAsReadVariables;
-import { ParticipantPopulated } from "../../../../../backend/src/graphql/types/conversations";
 import ConversationUpdatedData = Subscription.ConversationUpdatedData;
 import ConversationDeletedData = Subscription.ConversationDeletedData;
 
