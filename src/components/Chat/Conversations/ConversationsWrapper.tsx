@@ -16,12 +16,14 @@ import MarkConversationAsReadData = Mutation.MarkConversationAsReadData;
 import MarkConversationAsReadVariables = Mutation.MarkConversationAsReadVariables;
 import { ParticipantPopulated } from "../../../../../backend/src/graphql/types/conversations";
 import ConversationUpdatedData = Subscription.ConversationUpdatedData;
+import ConversationDeletedData = Subscription.ConversationDeletedData;
 
 export module Conversation {
   export type onViewConversation = (
     conversationId: string,
     hasSeenLatestMessage: boolean
   ) => void;
+  export type onDeleteConversation = (conversationId: string) => void;
 }
 
 type ConversationsWrapperProps = {
@@ -66,6 +68,41 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
         if (updatedConversation.id === conversationId) {
           onViewConversation(updatedConversation.id, false);
         }
+      },
+    }
+  );
+
+  useSubscription<ConversationDeletedData>(
+    ConversationOperations.Subscriptions.conversationDeleted,
+    {
+      onData: ({ client, data }) => {
+        console.log("HERE IS DATA: ", data);
+
+        const { data: subscriptionData } = data;
+
+        if (!subscriptionData) return;
+
+        const existing = client.readQuery<ConversationsData>({
+          query: ConversationOperations.Queries.conversations,
+        });
+
+        if (!existing) return;
+
+        const { conversations } = existing;
+        const {
+          conversationDeleted: { id: deletedConversationId },
+        } = subscriptionData;
+
+        client.writeQuery<ConversationsData>({
+          query: ConversationOperations.Queries.conversations,
+          data: {
+            conversations: conversations.filter(
+              (conversation) => conversation.id !== deletedConversationId
+            ),
+          },
+        });
+
+        router.push("/");
       },
     }
   );
@@ -174,7 +211,7 @@ const ConversationsWrapper: React.FC<ConversationsWrapperProps> = ({
   return (
     <Box
       display={{ base: conversationId ? "none" : "flex", md: "flex" }}
-      width={{ base: "100%", md: "400px" }}
+      width={{ base: "100%", md: "430px" }}
       flexDirection={"column"}
       bg={"whiteAlpha.50"}
       gap={4}

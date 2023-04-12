@@ -20,15 +20,26 @@ export module Mutation {
     userId: string;
     conversationId: string;
   }
+
+  export interface DeleteConversationVariables {
+    conversationId: string;
+  }
+
+  export interface DeleteConversationData {
+    deleteConversation: boolean;
+  }
 }
 
 export module Subscription {
   export interface ConversationUpdatedData {
     conversationUpdated: {
-      // conversation: Omit<ConversationPopulated, "latestMessage"> & {
-      //   latestMessage: MessagePopulated;
-      // };
       conversation: ConversationPopulated;
+    };
+  }
+
+  export interface ConversationDeletedData {
+    conversationDeleted: {
+      id: string;
     };
   }
 }

@@ -1,11 +1,19 @@
 import React, { useState } from "react";
 import { Session } from "next-auth";
-import { Box, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Stack, Text } from "@chakra-ui/react";
 import ConversationsModal from "@/components/Chat/Conversations/Modal/Modal";
 import { ConversationPopulated } from "../../../../../../backend/src/graphql/types/conversations/types";
 import ConversationItem from "@/components/Chat/Conversations/ConversationsList/ConversationItem";
 import { Conversation } from "@/components/Chat/Conversations/ConversationsWrapper";
 import { useRouter } from "next/router";
+import { useMutation } from "@apollo/client";
+import { ConversationOperations } from "@/graphql/operations/conversation";
+import { Mutation } from "@/graphql/types/conversation";
+import DeleteConversationVariables = Mutation.DeleteConversationVariables;
+import DeleteConversationData = Mutation.DeleteConversationData;
+import toast from "react-hot-toast";
+import * as process from "process";
+import { signOut } from "next-auth/react";
 
 type ConversationsListProps = {
   session: Session;
@@ -19,18 +27,58 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
   onViewConversation,
 }) => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+  const { conversationId } = router.query;
   const {
     user: { id: userId },
   } = session;
 
-  const { conversationId } = router.query;
-
+  const [isOpen, setIsOpen] = useState(false);
   const onOpen = () => setIsOpen(true);
   const onClose = () => setIsOpen(false);
+  const [deleteConversation] = useMutation<
+    DeleteConversationData,
+    DeleteConversationVariables
+  >(ConversationOperations.Mutations.deleteConversation);
+
+  const onDeleteConversation: Conversation.onDeleteConversation = async (
+    conversationId: string
+  ) => {
+    try {
+      toast.promise(
+        deleteConversation({
+          variables: {
+            conversationId,
+          },
+          update: () => {
+            router.replace(
+              typeof process.env.NEXT_PUBLIC_BASE_URL === "string"
+                ? process.env.NEXT_PUBLIC_BASE_URL
+                : ""
+            );
+          },
+        }),
+        {
+          loading: "Deleting conversation...",
+          success: "Conversation deleted",
+          error: "Failed to delete conversation",
+        }
+      );
+    } catch (error) {
+      console.log("onDeleteConversation error: ", error);
+    }
+  };
+
+  const sortedConversations = [...conversations].sort(
+    (a, b) => b.updatedAt.valueOf() - a.updatedAt.valueOf()
+  );
 
   return (
-    <Box width={"100%"}>
+    <Box
+      width={{ base: "100%", md: "400px" }}
+      position={"relative"}
+      height={"100%"}
+      overflow={"hidden"}
+    >
       <Box
         py={2}
         px={4}
@@ -46,7 +94,7 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
       </Box>
       <ConversationsModal session={session} isOpen={isOpen} onClose={onClose} />
       <Stack>
-        {conversations.map((conversation) => {
+        {sortedConversations.map((conversation) => {
           const participant = conversation.participants.find(
             (participant: ConversationPopulated) =>
               participant.user.id === userId
@@ -59,6 +107,7 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
               conversation={conversation}
               selectedConversationId={conversationId as string}
               hasSeenLatestMessage={participant?.hasSeenLatestMessage}
+              onDeleteConversation={onDeleteConversation}
               onClick={() =>
                 onViewConversation(
                   conversation.id,
@@ -69,6 +118,18 @@ const ConversationsList: React.FC<ConversationsListProps> = ({
           );
         })}
       </Stack>
+      <Box
+        position={"absolute"}
+        left={0}
+        bottom={0}
+        width={"100%"}
+        px={8}
+        py={6}
+      >
+        <Button width={"100%"} onClick={() => signOut()}>
+          Logout
+        </Button>
+      </Box>
     </Box>
   );
 };

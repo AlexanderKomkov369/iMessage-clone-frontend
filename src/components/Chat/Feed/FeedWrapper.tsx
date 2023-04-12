@@ -5,6 +5,7 @@ import { Flex } from "@chakra-ui/react";
 import MessagesHeader from "@/components/Chat/Feed/Messages/MessagesHeader";
 import MessagesInput from "@/components/Chat/Feed/Messages/MessagesInput";
 import Messages from "@/components/Chat/Feed/Messages/Messages";
+import NoConversationSelected from "@/components/Chat/Feed/NoConversationSelected";
 
 type FeedWrapperProps = {
   session: Session;
@@ -38,7 +39,7 @@ const FeedWrapper: React.FC<FeedWrapperProps> = ({ session }) => {
           <MessagesInput session={session} conversationId={conversationId} />
         </>
       ) : (
-        <div>No conversation selected</div>
+        <NoConversationSelected />
       )}
     </Flex>
   );

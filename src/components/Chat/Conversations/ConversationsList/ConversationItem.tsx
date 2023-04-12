@@ -11,12 +11,12 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { AiOutlineEdit } from "react-icons/ai";
-import { BiLogOut } from "react-icons/bi";
 import { MdDeleteOutline } from "react-icons/md";
 import { ConversationPopulated } from "../../../../../../backend/src/graphql/types/conversations/types";
 import { formatRelative } from "date-fns";
 import { formatUsernames } from "@/util/functions";
 import { GoPrimitiveDot } from "react-icons/go";
+import { Conversation } from "@/components/Chat/Conversations/ConversationsWrapper";
 
 interface ConversationItemProps {
   userId: string;
@@ -25,7 +25,7 @@ interface ConversationItemProps {
   onEditConversation?: () => void;
   hasSeenLatestMessage?: boolean;
   selectedConversationId?: string;
-  onDeleteConversation?: (conversationId: string) => void;
+  onDeleteConversation: Conversation.onDeleteConversation;
   onLeaveConversation?: (conversation: ConversationPopulated) => void;
 }
 
@@ -42,8 +42,8 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
   onClick,
   selectedConversationId,
   hasSeenLatestMessage,
+  onDeleteConversation,
   // onEditConversation,
-  // onDeleteConversation,
   // onLeaveConversation,
 }) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -80,35 +80,16 @@ const ConversationItem: React.FC<ConversationItemProps> = ({
       <Menu isOpen={menuOpen} onClose={() => setMenuOpen(false)}>
         <MenuList bg="#2d2d2d">
           <MenuItem
-            icon={<AiOutlineEdit fontSize={20} />}
+            icon={<MdDeleteOutline fontSize={20} />}
             onClick={(event) => {
               event.stopPropagation();
-              // onEditConversation();
+              onDeleteConversation(conversation.id);
             }}
+            bg={"#2d2d2d"}
+            _hover={{ bg: "whiteAlpha.300" }}
           >
-            Edit
+            Delete
           </MenuItem>
-          {conversation.participants.length > 2 ? (
-            <MenuItem
-              icon={<BiLogOut fontSize={20} />}
-              onClick={(event) => {
-                event.stopPropagation();
-                // onLeaveConversation(conversation);
-              }}
-            >
-              Leave
-            </MenuItem>
-          ) : (
-            <MenuItem
-              icon={<MdDeleteOutline fontSize={20} />}
-              onClick={(event) => {
-                event.stopPropagation();
-                // onDeleteConversation(conversation.id);
-              }}
-            >
-              Delete
-            </MenuItem>
-          )}
         </MenuList>
       </Menu>
       {/*)}*/}
